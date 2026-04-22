@@ -1,0 +1,162 @@
+/* ============================================================
+   IMPACT GALLERY PAGE (Public Charity View)
+   ============================================================ */
+.container {
+  min-height: 100vh;
+  padding: 120px 24px 80px;
+  background: radial-gradient(ellipse at 50% -10%, rgba(0, 240, 232, 0.08) 0%, transparent 60%),
+              var(--color-background);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-secondary-container);
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--color-on-surface-variant);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Stats bar */
+.statsBar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--color-surface-container-highest);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: 72px;
+}
+
+.stat {
+  background: var(--color-surface-container);
+  padding: 32px;
+  text-align: center;
+}
+
+.statValue {
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+  color: var(--color-secondary-container);
+}
+
+.statLabel {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+}
+
+/* Charity grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.charityCard {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+}
+
+.charityCard:hover {
+  transform: translateY(-4px);
+}
+
+.cardImageBanner {
+  height: 160px;
+  background: linear-gradient(135deg, var(--color-surface-container-high) 0%, var(--color-surface-bright) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.cardBody {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.charityName {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.charityDesc {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.progressWrapper {
+  margin-top: auto;
+}
+
+.progressLabel {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.progressAmount {
+  color: var(--color-secondary-container);
+}
+
+.progressTrack {
+  height: 6px;
+  background: var(--color-surface-container-highest);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-secondary-container), #00f5d4);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 8px rgba(0, 240, 232, 0.4);
+  transition: width 1s ease;
+}
+
+@media (max-width: 600px) {
+  .title { font-size: 36px; }
+  .statsBar { grid-template-columns: 1fr; }
+}

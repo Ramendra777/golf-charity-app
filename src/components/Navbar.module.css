@@ -1,0 +1,73 @@
+/* ============================================================
+   NAVBAR — glassmorphic sticky header
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 72px;
+  background: rgba(17, 19, 22, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.logo {
+  font-family: var(--font-epilogue), sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  color: var(--color-on-background);
+  text-decoration: none;
+}
+
+.logoAccent {
+  color: var(--color-primary-container);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.link {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-on-surface-variant);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--color-on-background);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobileToggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-on-background);
+  font-size: 24px;
+}
+
+@media (max-width: 768px) {
+  .links { display: none; }
+  .mobileToggle { display: block; }
+  .nav { padding: 0 16px; }
+}

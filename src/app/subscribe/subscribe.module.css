@@ -1,0 +1,194 @@
+/* ============================================================
+   SUBSCRIBE / PRICING PAGE
+   ============================================================ */
+.container {
+  min-height: 100vh;
+  padding: 120px 24px 80px;
+  background: radial-gradient(ellipse at 50% -10%, rgba(255, 92, 53, 0.12) 0%, transparent 60%),
+              var(--color-background);
+}
+
+.header {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 72px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-secondary-container);
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--color-on-surface-variant);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+}
+
+.card {
+  padding: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.cardFeatured {
+  border: 1px solid rgba(255, 92, 53, 0.4);
+  background: rgba(255, 92, 53, 0.05);
+}
+
+.badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary-container);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-jakarta), sans-serif;
+  padding: 4px 16px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.planName {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-jakarta), sans-serif;
+  color: var(--color-on-surface-variant);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.currency {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-on-surface-variant);
+}
+
+.amount {
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.period {
+  font-size: 16px;
+  font-family: var(--font-jakarta), sans-serif;
+  color: var(--color-on-surface-variant);
+}
+
+.saving {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 13px;
+  color: var(--color-secondary-container);
+  margin-bottom: 32px;
+  min-height: 20px;
+}
+
+.features {
+  list-style: none;
+  margin-bottom: 40px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 15px;
+  color: var(--color-on-surface);
+}
+
+.featureIcon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 240, 232, 0.15);
+  border: 1px solid var(--color-secondary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-secondary-container);
+  font-size: 11px;
+}
+
+.ctaBtn {
+  width: 100%;
+  padding: 16px;
+  font-size: 15px;
+}
+
+/* Charity section */
+.charitySection {
+  max-width: 900px;
+  margin: 72px auto 0;
+  padding: 40px;
+  text-align: center;
+}
+
+.charityTitle {
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+
+.charityText {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 16px;
+  color: var(--color-on-surface-variant);
+  line-height: 1.7;
+}
+
+.charityHighlight {
+  color: var(--color-secondary-container);
+  font-weight: 700;
+}

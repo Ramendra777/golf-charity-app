@@ -1,0 +1,155 @@
+/* ============================================================
+   PROFILE / SETTINGS PAGE
+   ============================================================ */
+.container {
+  min-height: 100vh;
+  padding: 100px 24px 64px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 15px;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 48px;
+}
+
+.card {
+  padding: 40px;
+  margin-bottom: 24px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--color-primary);
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input, .inputReadonly {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 15px;
+}
+
+.input {
+  background-color: var(--color-surface-container);
+  border: 1px solid var(--color-surface-container-highest);
+  color: var(--color-on-surface);
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-secondary-container);
+}
+
+.inputReadonly {
+  background-color: var(--color-surface-container-low);
+  border: 1px solid var(--color-surface-container-highest);
+  color: var(--color-on-surface-variant);
+  cursor: not-allowed;
+}
+
+.saveBtn {
+  padding: 12px 28px;
+}
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--color-surface-container);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+
+.statusLabel {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+}
+
+.statusValue {
+  font-family: var(--font-jakarta), sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-secondary-container);
+}
+
+.dangerZone {
+  padding: 40px;
+  border: 1px solid rgba(255, 180, 171, 0.3);
+  background: rgba(255, 180, 171, 0.04);
+}
+
+.dangerTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-error);
+  margin-bottom: 12px;
+}
+
+.dangerText {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 20px;
+}
+
+.dangerBtn {
+  background: transparent;
+  border: 1px solid var(--color-error);
+  color: var(--color-error);
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-jakarta), sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dangerBtn:hover {
+  background: rgba(255, 180, 171, 0.1);
+}
+
+.msg {
+  margin-top: 16px;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+}
+
+.msgSuccess {
+  background: rgba(0, 240, 232, 0.08);
+  border: 1px solid var(--color-secondary-container);
+  color: var(--color-secondary-container);
+}

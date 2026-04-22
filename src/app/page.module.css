@@ -1,98 +1,260 @@
+/* ============================================================
+   HOMEPAGE — Full Design System Implementation
+   Premium Impact: Obsidian + Sunset Pulse + Electric Teal
+   ============================================================ */
 .main {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
+/* ── HERO ── */
 .hero {
   position: relative;
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-center: center;
-  text-align: center;
-  padding: 4rem 1rem;
-  margin-top: 120px;
-}
-
-.heroTitle {
-  font-size: 72px;
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-  margin-bottom: 24px;
-  max-width: 800px;
-}
-
-.heroSubtitle {
-  font-size: 18px;
-  line-height: 1.6;
-  color: var(--color-on-surface-variant);
-  margin-bottom: 40px;
-  max-width: 600px;
-}
-
-.actionRow {
-  display: flex;
-  gap: 16px;
   justify-content: center;
-}
-
-@media (max-width: 600px) {
-  .heroTitle { font-size: 48px; }
-  .actionRow { flex-direction: column; width: 100%; max-width: 300px; }
-}
-
-.gallerySection {
-  margin: 0 auto 120px auto;
-  max-width: var(--spacing-container-max, 1280px);
-  width: 90%;
-  padding: 3rem;
-  position: relative;
+  text-align: center;
+  padding: 180px 24px 120px;
   overflow: hidden;
 }
 
-.galleryTitle {
-  font-size: 48px;
-  text-align: center;
+.heroGlow {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse, rgba(255, 92, 53, 0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-secondary-container);
+  margin-bottom: 20px;
+}
+
+.heroTitle {
+  font-size: clamp(48px, 8vw, 80px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 28px;
+  max-width: 700px;
+  background: linear-gradient(135deg, var(--color-on-background) 60%, var(--color-primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: clamp(16px, 2.5vw, 20px);
+  line-height: 1.65;
+  color: var(--color-on-surface-variant);
+  max-width: 580px;
   margin-bottom: 48px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+.heroCTAs {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.card {
-  padding: 24px;
+/* ── STATS ── */
+.statsSection {
+  padding: 0 24px 96px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--color-surface-container);
+  border: 1px solid var(--color-surface-container-highest);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.statItem {
+  padding: 36px 24px;
+  text-align: center;
+  border-right: 1px solid var(--color-surface-container-highest);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 6px;
+}
+
+.statItem:last-child { border-right: none; }
+
+.statValue {
+  font-family: var(--font-epilogue), sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--color-secondary-container);
+}
+
+.statLabel {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+}
+
+/* ── HOW IT WORKS ── */
+.howSection {
+  padding: 0 24px 120px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sectionTitle {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
   text-align: center;
+  margin-bottom: 56px;
 }
 
-.cardImage {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background-color: var(--color-surface-bright);
-  border: 2px solid var(--color-secondary);
-  margin-bottom: 24px;
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.stepCard {
+  padding: 32px 24px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-secondary);
-  font-weight: bold;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s ease;
 }
 
-.cardTitle {
+.stepCard:hover {
+  transform: translateY(-4px);
+}
+
+.stepNum {
+  font-family: var(--font-epilogue), sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--color-primary-container);
+  opacity: 0.8;
+  line-height: 1;
+}
+
+.stepTitle {
   font-size: 20px;
-  margin-bottom: 8px;
+  font-weight: 700;
 }
 
-.cardDesc {
+.stepDesc {
+  font-family: var(--font-jakarta), sans-serif;
   font-size: 14px;
   color: var(--color-on-surface-variant);
+  line-height: 1.65;
+}
+
+/* ── CHARITY SECTION ── */
+.charitySection {
+  padding: 0 24px 120px;
+}
+
+.charitySectionInner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  background: var(--color-surface-container-low);
+  border: 1px solid var(--color-surface-container-highest);
+  border-radius: var(--radius-xl);
+  padding: 64px;
+}
+
+.charityText {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--color-on-surface-variant);
+  margin-top: 12px;
+}
+
+.charityCards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.miniCharityCard {
+  padding: 20px 24px;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.2s ease;
+}
+
+.miniCharityCard:hover {
+  transform: translateX(6px);
+}
+
+/* ── FINAL CTA ── */
+.finalCTA {
+  padding: 0 24px 120px;
+}
+
+.finalCTABox {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 72px 48px;
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 92, 53, 0.08) 0%, transparent 65%),
+              rgba(255, 255, 255, 0.03);
+}
+
+.finalTitle {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+
+.finalText {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 18px;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 36px;
+  line-height: 1.6;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .stepsGrid { grid-template-columns: repeat(2, 1fr); }
+  .charitySectionInner { grid-template-columns: 1fr; gap: 40px; padding: 40px; }
+}
+
+@media (max-width: 768px) {
+  .statsGrid { grid-template-columns: repeat(2, 1fr); }
+  .statItem { border-right: none; border-bottom: 1px solid var(--color-surface-container-highest); }
+  .statItem:nth-child(2n) { border-right: none; }
+  .finalCTABox { padding: 48px 24px; }
+}
+
+@media (max-width: 600px) {
+  .stepsGrid { grid-template-columns: 1fr; }
+  .heroCTAs { flex-direction: column; align-items: center; }
+  .heroCTAs a { width: 100%; max-width: 320px; text-align: center; }
 }

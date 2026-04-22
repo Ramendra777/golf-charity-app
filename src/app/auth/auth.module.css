@@ -1,0 +1,135 @@
+/* ============================================================
+   AUTH PAGES — Login & Signup
+   ============================================================ */
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 16px 48px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 92, 53, 0.10) 0%, transparent 60%),
+              var(--color-background);
+}
+
+.card {
+  width: 100%;
+  max-width: 460px;
+  padding: 48px;
+}
+
+.logo {
+  font-family: var(--font-epilogue), sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.logoAccent {
+  color: var(--color-primary-container);
+}
+
+.subtitle {
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+}
+
+.label {
+  display: block;
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: var(--color-surface-container);
+  border: 1px solid var(--color-surface-container-highest);
+  border-bottom: 2px solid var(--color-surface-container-highest);
+  border-radius: var(--radius-md);
+  color: var(--color-on-surface);
+  font-family: var(--font-jakarta), sans-serif;
+  font-size: 15px;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-secondary-container);
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 16px;
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.errorMsg {
+  color: var(--color-error);
+  font-size: 14px;
+  font-family: var(--font-jakarta), sans-serif;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.successMsg {
+  color: var(--color-secondary-container);
+  font-size: 14px;
+  font-family: var(--font-jakarta), sans-serif;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.switchLink {
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  font-family: var(--font-jakarta), sans-serif;
+  color: var(--color-on-surface-variant);
+}
+
+.switchLink a {
+  color: var(--color-primary-container);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-surface-container-highest);
+}
+
+.dividerText {
+  font-size: 12px;
+  font-family: var(--font-jakarta), sans-serif;
+  color: var(--color-on-surface-variant);
+}
