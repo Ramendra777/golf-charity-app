@@ -1,67 +1,71 @@
 /* ============================================================
-   HOMEPAGE — Full Design System Implementation
-   Premium Impact: Obsidian + Sunset Pulse + Electric Teal
+   HOMEPAGE — matches Stitch "Emotional Homepage" design
    ============================================================ */
-.main {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
 
 /* ── HERO ── */
+.main { display: flex; flex-direction: column; min-height: 100vh; }
+
 .hero {
   position: relative;
+  min-height: 85vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 180px 24px 120px;
+  padding: 80px 24px 80px;
   overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -5%, rgba(255,92,53,0.18) 0%, transparent 55%),
+    linear-gradient(180deg, #0D0F12 0%, #0D0F12 100%);
 }
 
 .heroGlow {
-  position: absolute;
-  top: -20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  height: 600px;
-  background: radial-gradient(ellipse, rgba(255, 92, 53, 0.12) 0%, transparent 65%);
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(0,240,232,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 20% 40%, rgba(255,92,53,0.07) 0%, transparent 55%);
   pointer-events: none;
 }
 
-.eyebrow {
-  display: inline-block;
-  font-family: var(--font-jakarta), sans-serif;
-  font-size: 13px;
+.heroEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(255,92,53,0.1);
+  border: 1px solid rgba(255,92,53,0.3);
+  border-radius: var(--radius-full);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-secondary-container);
-  margin-bottom: 20px;
+  color: var(--color-primary-container);
+  margin-bottom: 28px;
 }
 
 .heroTitle {
-  font-size: clamp(48px, 8vw, 80px);
-  font-weight: 800;
+  font-size: clamp(42px, 7vw, 80px);
+  font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.04em;
-  margin-bottom: 28px;
-  max-width: 700px;
-  background: linear-gradient(135deg, var(--color-on-background) 60%, var(--color-primary));
+  margin-bottom: 24px;
+  max-width: 820px;
+}
+
+.heroTitleAccent {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-container) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .heroSubtitle {
-  font-family: var(--font-jakarta), sans-serif;
-  font-size: clamp(16px, 2.5vw, 20px);
+  font-size: clamp(16px, 2vw, 20px);
   line-height: 1.65;
   color: var(--color-on-surface-variant);
-  max-width: 580px;
-  margin-bottom: 48px;
+  max-width: 600px;
+  margin: 0 auto 48px;
 }
 
 .heroCTAs {
@@ -69,192 +73,418 @@
   gap: 16px;
   flex-wrap: wrap;
   justify-content: center;
+  margin-bottom: 72px;
 }
 
-/* ── STATS ── */
-.statsSection {
-  padding: 0 24px 96px;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  background: var(--color-surface-container);
-  border: 1px solid var(--color-surface-container-highest);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.statItem {
-  padding: 36px 24px;
-  text-align: center;
-  border-right: 1px solid var(--color-surface-container-highest);
+/* Jackpot counter */
+.jackpotBanner {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
+  padding: 28px 40px;
+  background: rgba(255,215,0,0.05);
+  border: 1px solid rgba(255,215,0,0.2);
+  border-radius: var(--radius-xl);
+  max-width: 500px;
+  width: 100%;
 }
 
-.statItem:last-child { border-right: none; }
-
-.statValue {
-  font-family: var(--font-epilogue), sans-serif;
-  font-size: 36px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--color-secondary-container);
+.jackpotLabel {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-gold);
 }
 
-.statLabel {
-  font-family: var(--font-jakarta), sans-serif;
-  font-size: 13px;
+.jackpotAmount {
+  font-family: var(--font-epilogue);
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--color-gold);
+  text-shadow: 0 0 40px rgba(255,215,0,0.4);
+}
+
+.jackpotSub {
+  font-size: 14px;
   color: var(--color-on-surface-variant);
 }
 
-/* ── HOW IT WORKS ── */
-.howSection {
-  padding: 0 24px 120px;
+/* ── HOW IT WORKS — 3 steps ── */
+.stepsSection {
+  padding: 100px 24px;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
 }
 
-.sectionTitle {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
+.sectionEyebrow {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-secondary-container);
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 64px;
 }
 
 .stepsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
 
 .stepCard {
-  padding: 32px 24px;
+  padding: 40px 32px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   transition: transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.stepCard:hover {
-  transform: translateY(-4px);
+.stepCard:hover { transform: translateY(-6px); }
+
+.stepCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(255,92,53,0.06) 0%, transparent 60%);
+}
+
+.stepIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(255,92,53,0.2) 0%, rgba(255,92,53,0.05) 100%);
+  border: 1px solid rgba(255,92,53,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
 }
 
 .stepNum {
-  font-family: var(--font-epilogue), sans-serif;
-  font-size: 40px;
-  font-weight: 800;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--color-primary-container);
-  opacity: 0.8;
-  line-height: 1;
 }
 
 .stepTitle {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
 }
 
 .stepDesc {
-  font-family: var(--font-jakarta), sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--color-on-surface-variant);
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
-/* ── CHARITY SECTION ── */
-.charitySection {
-  padding: 0 24px 120px;
+/* ── JACKPOT PRIZE DISPLAY ── */
+.prizeSection {
+  padding: 0 24px 100px;
 }
 
-.charitySectionInner {
+.prizeSectionInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 64px;
   align-items: center;
-  max-width: 1100px;
-  margin: 0 auto;
-  background: var(--color-surface-container-low);
-  border: 1px solid var(--color-surface-container-highest);
-  border-radius: var(--radius-xl);
-  padding: 64px;
 }
 
-.charityText {
-  font-family: var(--font-jakarta), sans-serif;
-  font-size: 17px;
-  line-height: 1.7;
+.prizeLabel {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary-container);
+  margin-bottom: 12px;
+}
+
+.prizeAmount {
+  font-family: var(--font-epilogue);
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: var(--color-gold);
+  margin-bottom: 16px;
+}
+
+.prizeDesc {
+  font-size: 16px;
   color: var(--color-on-surface-variant);
-  margin-top: 12px;
+  line-height: 1.7;
+  margin-bottom: 32px;
 }
 
-.charityCards {
+.tierList {
   display: flex;
   flex-direction: column;
+  gap: 12px;
+}
+
+.tierItem {
+  display: flex;
+  align-items: center;
   gap: 16px;
+  padding: 16px 20px;
+  background: var(--color-surface-container);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-primary);
 }
 
-.miniCharityCard {
-  padding: 20px 24px;
-  font-family: var(--font-jakarta), sans-serif;
-  font-size: 16px;
+.tierBadge {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-on-surface-variant);
+  min-width: 60px;
+}
+
+.tierName {
+  font-size: 15px;
   font-weight: 600;
-  transition: transform 0.2s ease;
 }
 
-.miniCharityCard:hover {
-  transform: translateX(6px);
+/* ── IMPACT STATS ── */
+.impactSection {
+  background: var(--color-surface-container-low);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 80px 24px;
+}
+
+.impactInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.impactStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.impactStat {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.impactStatValue {
+  font-family: var(--font-epilogue);
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--color-secondary-container);
+}
+
+.impactStatLabel {
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+  line-height: 1.5;
+}
+
+.impactSpotlight {
+  padding: 32px;
+}
+
+.spotlightTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-secondary-container);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.spotlightName {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.spotlightDesc {
+  font-size: 15px;
+  color: var(--color-on-surface-variant);
+  line-height: 1.7;
 }
 
 /* ── FINAL CTA ── */
 .finalCTA {
-  padding: 0 24px 120px;
+  padding: 100px 24px;
+  text-align: center;
 }
 
-.finalCTABox {
-  max-width: 780px;
+.finalCTAInner {
+  max-width: 700px;
   margin: 0 auto;
   padding: 72px 48px;
-  text-align: center;
-  background: radial-gradient(ellipse at 50% 0%, rgba(255, 92, 53, 0.08) 0%, transparent 65%),
-              rgba(255, 255, 255, 0.03);
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,92,53,0.1) 0%, transparent 60%),
+    rgba(255,255,255,0.03);
 }
 
 .finalTitle {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 900;
   margin-bottom: 16px;
 }
 
-.finalText {
-  font-family: var(--font-jakarta), sans-serif;
-  font-size: 18px;
+.finalSub {
+  font-size: 17px;
   color: var(--color-on-surface-variant);
-  margin-bottom: 36px;
+  margin-bottom: 40px;
   line-height: 1.6;
 }
 
+/* ── FOOTER ── */
+.footer {
+  background: var(--color-surface);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 64px 24px 32px;
+}
+
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footerTop {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.footerBrand .footerLogo {
+  font-family: var(--font-epilogue);
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.footerBrand .footerLogo span { color: var(--color-primary-container); }
+
+.footerTagline {
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+  line-height: 1.6;
+  max-width: 260px;
+  margin-bottom: 24px;
+}
+
+.footerSocials {
+  display: flex;
+  gap: 12px;
+}
+
+.socialBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-container);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--color-on-surface-variant);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.socialBtn:hover {
+  border-color: var(--color-primary-container);
+  color: var(--color-primary-container);
+}
+
+.footerColTitle {
+  font-family: var(--font-jakarta);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-on-surface-variant);
+  margin-bottom: 20px;
+}
+
+.footerLinks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footerLinks a {
+  font-size: 14px;
+  color: var(--color-on-surface-variant);
+  transition: color 0.2s ease;
+}
+
+.footerLinks a:hover { color: var(--color-on-surface); }
+
+.footerBottom {
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footerCopy {
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+}
+
+.footerLegal {
+  display: flex;
+  gap: 24px;
+}
+
+.footerLegal a {
+  font-size: 13px;
+  color: var(--color-on-surface-variant);
+  transition: color 0.2s ease;
+}
+
+.footerLegal a:hover { color: var(--color-on-surface); }
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
-  .stepsGrid { grid-template-columns: repeat(2, 1fr); }
-  .charitySectionInner { grid-template-columns: 1fr; gap: 40px; padding: 40px; }
+  .prizeSectionInner { grid-template-columns: 1fr; gap: 40px; padding: 32px; }
+  .impactInner { grid-template-columns: 1fr; gap: 40px; }
+  .footerTop { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 768px) {
-  .statsGrid { grid-template-columns: repeat(2, 1fr); }
-  .statItem { border-right: none; border-bottom: 1px solid var(--color-surface-container-highest); }
-  .statItem:nth-child(2n) { border-right: none; }
-  .finalCTABox { padding: 48px 24px; }
-}
-
-@media (max-width: 600px) {
   .stepsGrid { grid-template-columns: 1fr; }
+  .impactStats { grid-template-columns: 1fr 1fr; }
+  .footerTop { grid-template-columns: 1fr; }
   .heroCTAs { flex-direction: column; align-items: center; }
-  .heroCTAs a { width: 100%; max-width: 320px; text-align: center; }
+  .heroCTAs a, .heroCTAs button { width: 100%; max-width: 320px; }
 }

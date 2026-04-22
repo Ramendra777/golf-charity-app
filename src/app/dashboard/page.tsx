@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import styles from './dashboard.module.css';
 
@@ -22,91 +23,81 @@ interface Charity {
 }
 
 function useCountdown() {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
-
+  const [t, setT] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
   useEffect(() => {
-    const calcTime = () => {
+    const tick = () => {
       const now = new Date();
-      const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0);
-      const diff = endOfMonth.getTime() - now.getTime();
+      const end = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      const diff = end.getTime() - now.getTime();
       if (diff <= 0) return;
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const secs = Math.floor((diff % (1000 * 60)) / 1000);
-      setTimeLeft({ days, hours, mins, secs });
+      setT({
+        days:  Math.floor(diff / 86400000),
+        hours: Math.floor((diff % 86400000) / 3600000),
+        mins:  Math.floor((diff % 3600000) / 60000),
+        secs:  Math.floor((diff % 60000) / 1000),
+      });
     };
-    calcTime();
-    const interval = setInterval(calcTime, 1000);
-    return () => clearInterval(interval);
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
   }, []);
-
-  return timeLeft;
+  return t;
 }
 
+const NAV_ITEMS = [
+  { id: 'overview', icon: '🏠', label: 'Dashboard' },
+  { id: 'scores', icon: '⛳', label: 'Scorecard' },
+  { id: 'charity', icon: '💚', label: 'Impact Stats' },
+];
+
 export default function Dashboard() {
+  const [activeTab, setActiveTab] = useState('overview');
   const [profile, setProfile] = useState<Profile | null>(null);
   const [scores, setScores] = useState<Score[]>([]);
   const [charities, setCharities] = useState<Charity[]>([]);
   const [selectedCharity, setSelectedCharity] = useState('');
-  const [score, setScore] = useState<number | ''>('');
-  const [date, setDate] = useState('');
-  const [msg, setMsg] = useState<{ text: string; type: 'error' | 'success' } | null>(null);
-  const [loadingScores, setLoadingScores] = useState(true);
+  // Score form
+  const [formScore, setFormScore] = useState<number | ''>('');
+  const [formDate, setFormDate] = useState('');
   const [editingScore, setEditingScore] = useState<Score | null>(null);
+  const [msg, setMsg] = useState<{ text: string; type: 'error' | 'success' } | null>(null);
   const countdown = useCountdown();
+
+  // Simulated draw numbers (would come from live draw data in production)
+  const myNumbers = [14, 88, 23, 9];
 
   const fetchData = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
-
-    const [profileRes, scoresRes, charitiesRes] = await Promise.all([
+    const [pRes, sRes, cRes] = await Promise.all([
       supabase.from('profiles').select('full_name, subscription_status, selected_charity_id').eq('id', user.id).single(),
       supabase.from('scores').select('id, score, date').eq('user_id', user.id).order('date', { ascending: false }).limit(5),
       supabase.from('charities').select('id, name'),
     ]);
-
-    if (profileRes.data) {
-      setProfile(profileRes.data);
-      setSelectedCharity(profileRes.data.selected_charity_id ?? '');
-    }
-    if (scoresRes.data) setScores(scoresRes.data);
-    if (charitiesRes.data) setCharities(charitiesRes.data);
-    setLoadingScores(false);
+    if (pRes.data) { setProfile(pRes.data); setSelectedCharity(pRes.data.selected_charity_id ?? ''); }
+    if (sRes.data) setScores(sRes.data);
+    if (cRes.data) setCharities(cRes.data);
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
   const submitScore = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!score || Number(score) < 1 || Number(score) > 45 || !date) {
-      setMsg({ text: 'Valid Stableford score (1–45) and date required.', type: 'error' });
+    if (!formScore || Number(formScore) < 1 || Number(formScore) > 45 || !formDate) {
+      setMsg({ text: 'Enter a valid Stableford score (1–45) and date.', type: 'error' });
       return;
     }
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
     if (editingScore) {
-      // Update existing score
-      const { error } = await supabase.from('scores').update({ score: Number(score), date }).eq('id', editingScore.id);
-      if (error) {
-        setMsg({ text: error.code === '23505' ? 'A score for this date already exists.' : error.message, type: 'error' });
-      } else {
-        setMsg({ text: 'Score updated successfully.', type: 'success' });
-        setEditingScore(null);
-        setScore(''); setDate('');
-        fetchData();
-      }
+      const { error } = await supabase.from('scores').update({ score: Number(formScore), date: formDate }).eq('id', editingScore.id);
+      if (error) setMsg({ text: error.message, type: 'error' });
+      else { setMsg({ text: 'Score updated!', type: 'success' }); setEditingScore(null); setFormScore(''); setFormDate(''); fetchData(); }
     } else {
-      // Insert new score (trigger handles rolling 5 logic)
-      const { error } = await supabase.from('scores').insert([{ user_id: user.id, score: Number(score), date }]);
-      if (error) {
-        setMsg({ text: error.code === '23505' ? 'You already have a score for this date.' : error.message, type: 'error' });
-      } else {
-        setMsg({ text: 'Score recorded! Only your latest 5 are kept.', type: 'success' });
-        setScore(''); setDate('');
-        fetchData();
-      }
+      const { error } = await supabase.from('scores').insert([{ user_id: user.id, score: Number(formScore), date: formDate }]);
+      if (error) setMsg({ text: error.code === '23505' ? 'A score for this date already exists.' : error.message, type: 'error' });
+      else { setMsg({ text: 'Score recorded! Rolling 5 logic applied.', type: 'success' }); setFormScore(''); setFormDate(''); fetchData(); }
     }
   };
 
@@ -117,166 +108,319 @@ export default function Dashboard() {
   };
 
   const startEdit = (s: Score) => {
-    setEditingScore(s);
-    setScore(s.score);
-    setDate(s.date);
-    setMsg(null);
+    setEditingScore(s); setFormScore(s.score); setFormDate(s.date); setMsg(null); setActiveTab('scores');
   };
 
   const saveCharity = async () => {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user || !selectedCharity) return;
-    await supabase.from('profiles').update({ selected_charity_id: selectedCharity }).eq('id', user.id);
+    if (!user) return;
+    await supabase.from('profiles').update({ selected_charity_id: selectedCharity || null }).eq('id', user.id);
     setMsg({ text: 'Charity preference saved!', type: 'success' });
   };
 
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.href = '/';
+  };
+
+  const firstName = profile?.full_name?.split(' ')[0] || 'Golfer';
+  const initials = profile?.full_name?.split(' ').map((n) => n[0]).join('').toUpperCase() || '?';
   const isActive = profile?.subscription_status === 'active';
 
   return (
-    <div className={styles.dashboardContainer}>
-      <header className={styles.header}>
-        <div>
-          <h1 className={styles.greeting}>
-            Welcome back{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''} 👋
-          </h1>
-          <p className={styles.subText}>Track your scores, impact, and draws from here.</p>
+    <div className={styles.shell}>
+      {/* ── SIDEBAR ── */}
+      <aside className={styles.sidebar}>
+        <div className={styles.userCard}>
+          <div className={styles.userAvatar}>{initials}</div>
+          <div className={styles.userName}>{profile?.full_name || 'Member'}</div>
+          <span className={`${styles.userTier} ${styles.tierGold}`}>🥇 Gold Tier</span>
         </div>
-        <span className={`${styles.badge} ${isActive ? styles.badgeActive : styles.badgeInactive}`}>
-          <span className={styles.badgeDot} />
-          {isActive ? 'Active Member' : 'No Active Plan'}
-        </span>
-      </header>
 
-      <div className={styles.mainGrid}>
-        {/* ── Score Entry ── */}
-        <section className={`glass-container-xl ${styles.card}`}>
-          <h2 className={styles.cardTitle}>{editingScore ? '✏️ Edit Score' : '➕ Record Score'}</h2>
-          <form onSubmit={submitScore} id="score-form">
-            <div className={styles.inputGroup}>
-              <label htmlFor="score-input" className={styles.label}>Stableford Points (1 – 45)</label>
-              <input
-                id="score-input"
-                type="number"
-                min={1} max={45}
-                value={score}
-                onChange={(e) => setScore(e.target.value ? Number(e.target.value) : '')}
-                className={styles.input}
-                placeholder="e.g. 34"
-                required
-              />
-            </div>
-            <div className={styles.inputGroup}>
-              <label htmlFor="score-date" className={styles.label}>Date of Round</label>
-              <input
-                id="score-date"
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className={styles.input}
-                required
-              />
-            </div>
-            <div className={styles.formFooter}>
-              <button id="score-submit" type="submit" className={`btn-primary ${styles.submitBtn}`}>
-                {editingScore ? 'Update Score' : 'Record Score'}
-              </button>
-              {editingScore && (
-                <button type="button" className="btn-secondary" onClick={() => { setEditingScore(null); setScore(''); setDate(''); }}>
-                  Cancel
-                </button>
-              )}
-            </div>
-          </form>
-          {msg && (
-            <p className={`${styles.msg} ${msg.type === 'error' ? styles.msgError : styles.msgSuccess}`}>
-              {msg.text}
-            </p>
-          )}
-        </section>
+        <nav className={styles.navMenu} aria-label="Dashboard navigation">
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              id={`nav-${item.id}`}
+              className={`${styles.navItem} ${activeTab === item.id ? styles.navItemActive : ''}`}
+              onClick={() => setActiveTab(item.id)}
+            >
+              <span className={styles.navIcon}>{item.icon}</span>
+              {item.label}
+            </button>
+          ))}
+          <Link href="/dashboard/profile" className={styles.navItem} id="nav-settings">
+            <span className={styles.navIcon}>⚙️</span> Settings
+          </Link>
+          <a href="#" className={styles.navItem} id="nav-support">
+            <span className={styles.navIcon}>❓</span> Support
+          </a>
+        </nav>
 
-        {/* ── Score History ── */}
-        <section className={`glass-container-xl ${styles.card}`}>
-          <h2 className={styles.cardTitle}>🏌️ Your Last 5 Scores</h2>
-          {loadingScores ? (
-            <p className={styles.scoreEmpty}>Loading scores...</p>
-          ) : scores.length === 0 ? (
-            <p className={styles.scoreEmpty}>No scores yet. Record your first round!</p>
-          ) : (
-            <div className={styles.scoreList}>
-              {scores.map((s, i) => (
-                <div key={s.id} className={styles.scoreItem}>
-                  <div className={styles.scoreDetails}>
-                    <span className={styles.scorePts}>{s.score} pts</span>
-                    <span className={styles.scoreDate}>
-                      {i === 0 && '⭐ Latest — '}
-                      {new Date(s.date).toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' })}
-                    </span>
-                  </div>
-                  <div className={styles.scoreActions}>
-                    <button className={styles.btnIconSmall} onClick={() => startEdit(s)} title="Edit score">Edit</button>
-                    <button className={styles.btnIconSmall} onClick={() => deleteScore(s.id)} title="Delete score">Delete</button>
+        <div className={styles.navSignOut}>
+          <button className={styles.navItem} onClick={handleSignOut} id="nav-signout">
+            <span className={styles.navIcon}>🚪</span> Sign Out
+          </button>
+        </div>
+      </aside>
+
+      {/* ── CONTENT ── */}
+      <main className={styles.content}>
+
+        {/* ── OVERVIEW TAB ── */}
+        {activeTab === 'overview' && (
+          <>
+            <h1 className={styles.pageTitle}>Welcome back, {firstName} 👋</h1>
+            <p className={styles.pageSubtitle}>Your impact this month has supported 12 youth golf scholarships.</p>
+
+            {/* Stats */}
+            <div className={styles.statsRow}>
+              <div className={`glass-container ${styles.statCard}`}>
+                <div className={styles.statValue}>£1,250</div>
+                <div className={styles.statDiff}>+ £250 since last month</div>
+                <div className={styles.statLabel}>Total Won</div>
+              </div>
+              <div className={`glass-container ${styles.statCard}`}>
+                <div className={styles.statValue}>154</div>
+                <div className={styles.statLabel}>Lives Impacted</div>
+              </div>
+              <div className={`glass-container ${styles.statCard}`}>
+                <div className={styles.statValue}>£4,820</div>
+                <div className={styles.statLabel}>Total Contribution</div>
+              </div>
+            </div>
+
+            {/* Draw entry card */}
+            <div className={`glass-container-xl ${styles.drawCard}`}>
+              <div className={styles.drawCardHeader}>
+                <div>
+                  <div className={styles.drawName}>August Pro-Am Getaway</div>
+                  <div style={{ fontSize: '13px', color: 'var(--color-on-surface-variant)', marginTop: '4px' }}>Monthly Prize Draw</div>
+                </div>
+                <span className={styles.drawStatus}>● Confirmed</span>
+              </div>
+
+              <div className={styles.drawMeta}>
+                <div>
+                  <div className={styles.drawMetaLabel}>Your Numbers</div>
+                  <div className={styles.drawNumbers}>
+                    {myNumbers.map((n) => (
+                      <span key={n} className={styles.drawNum}>{String(n).padStart(2, '0')}</span>
+                    ))}
                   </div>
                 </div>
-              ))}
+                <div>
+                  <div className={styles.drawMetaLabel}>Starts In</div>
+                  <div className={styles.countdown}>
+                    {[
+                      { n: countdown.days, l: 'Days' },
+                      { n: countdown.hours, l: 'Hrs' },
+                      { n: countdown.mins, l: 'Min' },
+                      { n: countdown.secs, l: 'Sec' },
+                    ].map(({ n, l }) => (
+                      <div key={l} className={styles.countUnit}>
+                        <span className={styles.countNum}>{String(n).padStart(2, '0')}</span>
+                        <span className={styles.countLabel}>{l}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
-        </section>
 
-        {/* ── Charity Selection ── */}
-        <section className={`glass-container-xl ${styles.card}`}>
-          <h2 className={styles.cardTitle}>💚 Your Charity</h2>
-          <div className={styles.inputGroup}>
-            <label htmlFor="charity-select" className={styles.label}>Select your charity</label>
-            <select
-              id="charity-select"
-              className={styles.charitySelect}
-              value={selectedCharity}
-              onChange={(e) => setSelectedCharity(e.target.value)}
-            >
-              <option value="">-- Choose a charity --</option>
-              {charities.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
-          <button id="save-charity" className="btn-primary" style={{ padding: '12px 24px' }} onClick={saveCharity}>
-            Save Preference
-          </button>
-        </section>
-
-        {/* ── Draw Countdown & Winnings ── */}
-        <section className={`glass-container-xl ${styles.card}`}>
-          <h2 className={styles.cardTitle}>🎯 Monthly Draw</h2>
-          <p className={styles.subText} style={{ marginBottom: '16px' }}>Next draw closes at end of month:</p>
-
-          <div className={styles.countdown}>
-            {[
-              { num: countdown.days, label: 'Days' },
-              { num: countdown.hours, label: 'Hrs' },
-              { num: countdown.mins, label: 'Mins' },
-              { num: countdown.secs, label: 'Secs' },
-            ].map(({ num, label }) => (
-              <div key={label} className={styles.countdownUnit}>
-                <span className={styles.countdownNum}>{String(num).padStart(2, '0')}</span>
-                <span className={styles.countdownLabel}>{label}</span>
+            {/* Impact row */}
+            <div className={styles.impactRow}>
+              <div className={`glass-container ${styles.impactCard}`}>
+                <div className={styles.impactIcon}>🌱</div>
+                <div>
+                  <div className={styles.impactValue}>42 Trees</div>
+                  <div className={styles.impactLabel}>Climate Action Planted</div>
+                </div>
               </div>
-            ))}
-          </div>
-
-          <div style={{ marginTop: '24px' }}>
-            {[
-              { label: 'Total Winnings', value: '£0.00' },
-              { label: 'Last Draw Result', value: 'No match yet' },
-              { label: 'Current Month Status', value: isActive ? 'Entered ✓' : 'Inactive' },
-            ].map(({ label, value }) => (
-              <div key={label} className={styles.statRow}>
-                <span className={styles.statLabel}>{label}</span>
-                <span className={styles.statValue}>{value}</span>
+              <div className={`glass-container ${styles.impactCard}`}>
+                <div className={styles.impactIcon}>🎓</div>
+                <div>
+                  <div className={styles.impactValue}>12</div>
+                  <div className={styles.impactLabel}>Scholarships Funded</div>
+                </div>
               </div>
-            ))}
-          </div>
-        </section>
-      </div>
+            </div>
+
+            {/* Recent scores preview */}
+            <div className={`glass-container-xl ${styles.scoresCard}`}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>Recent Scores</h2>
+                <button className={styles.viewAllLink} onClick={() => setActiveTab('scores')}>View All →</button>
+              </div>
+              <table className={styles.scoresTable}>
+                <thead>
+                  <tr>
+                    <th>Course</th>
+                    <th>Date</th>
+                    <th>Points</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scores.length === 0 ? (
+                    <tr><td colSpan={3} style={{ color: 'var(--color-on-surface-variant)', padding: '24px 0', fontFamily: 'var(--font-jakarta)', fontSize: '14px' }}>No scores yet. Record your first round!</td></tr>
+                  ) : scores.slice(0, 3).map((s) => (
+                    <tr key={s.id}>
+                      <td>Golf Course</td>
+                      <td>{new Date(s.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                      <td className={styles.scorePoints}>{s.score} pts</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {!isActive && (
+              <div className={`glass-container ${styles.formCard}`} style={{ background: 'rgba(255,92,53,0.05)', border: '1px solid rgba(255,92,53,0.3)' }}>
+                <h3 style={{ marginBottom: '8px' }}>Activate Your Membership</h3>
+                <p style={{ color: 'var(--color-on-surface-variant)', marginBottom: '16px', fontFamily: 'var(--font-jakarta)', fontSize: '14px' }}>
+                  Subscribe to enter draws, track scores, and contribute to charity.
+                </p>
+                <Link href="/subscribe" className="btn-primary" style={{ padding: '12px 24px', fontSize: '14px' }}>
+                  Choose a Plan →
+                </Link>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ── SCORECARD TAB ── */}
+        {activeTab === 'scores' && (
+          <>
+            <h1 className={styles.pageTitle}>Scorecard</h1>
+            <p className={styles.pageSubtitle}>Your last 5 Stableford rounds. The rolling window is automatic.</p>
+
+            {/* Entry form */}
+            <div className={`glass-container-xl ${styles.formCard}`}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>{editingScore ? '✏️ Edit Score' : '➕ Record New Score'}</h2>
+                {editingScore && (
+                  <button className={styles.btnIconSmall} onClick={() => { setEditingScore(null); setFormScore(''); setFormDate(''); }}>
+                    Cancel
+                  </button>
+                )}
+              </div>
+
+              <form onSubmit={submitScore} id="score-form">
+                <div className={styles.inputGrid}>
+                  <div className={styles.inputGroup}>
+                    <label htmlFor="score-input" className={styles.inputLabel}>Stableford Points (1–45)</label>
+                    <input
+                      id="score-input"
+                      type="number"
+                      min={1} max={45}
+                      value={formScore}
+                      onChange={(e) => setFormScore(e.target.value ? Number(e.target.value) : '')}
+                      className={styles.input}
+                      placeholder="e.g. 36"
+                      required
+                    />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label htmlFor="score-date" className={styles.inputLabel}>Date of Round</label>
+                    <input
+                      id="score-date"
+                      type="date"
+                      value={formDate}
+                      onChange={(e) => setFormDate(e.target.value)}
+                      className={styles.input}
+                      required
+                    />
+                  </div>
+                </div>
+                <button id="score-submit" type="submit" className="btn-primary" style={{ padding: '12px 28px' }}>
+                  {editingScore ? 'Update Score' : 'Record Score'}
+                </button>
+              </form>
+
+              {msg && <p className={`${styles.msg} ${msg.type === 'error' ? styles.msgError : styles.msgSuccess}`}>{msg.text}</p>}
+            </div>
+
+            {/* Scores table */}
+            <div className={`glass-container-xl ${styles.scoresCard}`}>
+              <div className={styles.cardHeader}>
+                <h2 className={styles.cardTitle}>Your Last 5 Scores</h2>
+              </div>
+              <table className={styles.scoresTable}>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Points</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scores.length === 0 ? (
+                    <tr><td colSpan={4} style={{ color: 'var(--color-on-surface-variant)', padding: '24px 0', fontFamily: 'var(--font-jakarta)', fontSize: '14px' }}>No scores yet.</td></tr>
+                  ) : scores.map((s, i) => (
+                    <tr key={s.id}>
+                      <td style={{ color: 'var(--color-on-surface-variant)' }}>#{i + 1}</td>
+                      <td className={styles.scorePoints}>{s.score} pts</td>
+                      <td>{new Date(s.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                      <td>
+                        <button className={styles.btnIconSmall} onClick={() => startEdit(s)}>Edit</button>
+                        <button className={styles.btnIconSmall} onClick={() => deleteScore(s.id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+
+        {/* ── CHARITY/IMPACT TAB ── */}
+        {activeTab === 'charity' && (
+          <>
+            <h1 className={styles.pageTitle}>Impact Stats</h1>
+            <p className={styles.pageSubtitle}>Your subscription is making a real difference in these causes.</p>
+
+            {/* Charity selector */}
+            <div className={`glass-container-xl ${styles.charityCard}`}>
+              <h2 className={styles.cardTitle} style={{ marginBottom: '16px' }}>Your Charity</h2>
+              <label htmlFor="charity-select" className={styles.inputLabel}>Select your charity recipient</label>
+              <select
+                id="charity-select"
+                className={styles.charitySelect}
+                value={selectedCharity}
+                onChange={(e) => setSelectedCharity(e.target.value)}
+              >
+                <option value="">Choose a charity...</option>
+                {charities.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              <button id="save-charity" className="btn-primary" style={{ padding: '12px 24px' }} onClick={saveCharity}>
+                Save Preference
+              </button>
+            </div>
+
+            {/* Impact breakdown */}
+            <div className={styles.impactRow}>
+              <div className={`glass-container ${styles.impactCard}`}>
+                <div className={styles.impactIcon}>🌱</div>
+                <div>
+                  <div className={styles.impactValue}>42 Trees</div>
+                  <div className={styles.impactLabel}>Planted via Climate Action</div>
+                </div>
+              </div>
+              <div className={`glass-container ${styles.impactCard}`}>
+                <div className={styles.impactIcon}>🎓</div>
+                <div>
+                  <div className={styles.impactValue}>12</div>
+                  <div className={styles.impactLabel}>Scholarships Funded</div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+      </main>
     </div>
   );
 }
