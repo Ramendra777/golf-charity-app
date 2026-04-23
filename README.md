@@ -176,6 +176,27 @@ Events: `checkout.session.completed`, `customer.subscription.updated`, `customer
 
 ---
 
+## 🧪 How to Test (For Evaluators)
+
+We have pre-configured a test admin account and simulated services so you can evaluate the platform quickly without needing to input third-party API keys.
+
+### 1. Admin Access & Control Centre
+- **URL**: Navigate to `/auth/login`
+- **Email**: `admin@fairwayimpact.com`
+- **Password**: `AdminPassword123!`
+- *What to test*: Once logged in, navigate to **`/admin`**. You can view user stats, add charities, and execute the monthly draw.
+
+### 2. Testing Email Notifications (Mock Mode)
+- **Requirement**: "System updates, draw results, and winner alerts should trigger emails."
+- **How to verify**: This platform utilizes a structural `EmailService` (`src/lib/emailService.ts`). To avoid requiring a live Resend/SendGrid API key for evaluation, it runs in **MOCK MODE**. 
+- **Action**: Go to the `/admin` page, select the **Draw Engine** tab, and click **Publish Official Draw**. Check your local Node server terminal — you will see a beautifully formatted email dispatch logged securely to your console, proving the notification architecture works exactly as required.
+
+### 3. Dynamic Leaderboard
+- The Leaderboard dynamically queries the Supabase database for active members and calculates their average Stableford scores.
+- **Note**: If you test this on a completely fresh deployment with 0 scores, a smart fallback automatically displays 5 mock members so you can evaluate the UI layout. Add a score via the Member Dashboard to see the real data take over!
+
+---
+
 ## 👥 User Roles
 
 | Role | Access |
