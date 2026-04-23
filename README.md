@@ -224,24 +224,8 @@ supabase/
     └── 00001_initial_schema.sql    # Full DB schema + seed
 ```
 
----
 
-## 📋 Commit History
-
-| # | Commit | Description |
-|---|---|---|
-| 1 | Project init | Next.js 16 + TypeScript scaffold |
-| 2 | Design system | Global CSS tokens, Navbar, layout |
-| 3 | Auth pages | Login, Signup with Supabase |
-| 4 | Public pages | Homepage, Impact Gallery, Subscribe |
-| 5 | Member Dashboard | Scorecard, charity selection, draw countdown |
-| 6 | Draw Logic | Score matching, jackpot rollover |
-| 7 | Admin Dashboard | Analytics, draw engine, charity CRUD, winners |
-| 8 | Feature audit | Route protection, build fixes, SQL cleanup |
-| 9 | Stitch design match | Navbar links, jackpot banner, sidebar layout, new pages |
-
----
 
 ## 📄 License
 
-MIT © 2024 Fairway Impact Rewards
+MIT © 2026 Fairway Impact Rewards
