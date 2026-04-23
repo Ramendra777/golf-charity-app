@@ -44,6 +44,9 @@ export default function SignupPage() {
         role: 'user',
         subscription_status: 'inactive',
       });
+      if (data.session) {
+        document.cookie = `sb-access-token=${data.session.access_token}; path=/; max-age=${data.session.expires_in}; SameSite=Lax`;
+      }
       setSuccess('Account created! Please check your email to confirm, then subscribe to access the platform.');
     }
     setLoading(false);
